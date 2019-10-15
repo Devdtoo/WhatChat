@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "1096604963474",
+    "firebase_url": "https://chatoneapp-30f38.firebaseio.com",
+    "project_id": "chatoneapp-30f38",
+    "storage_bucket": "chatoneapp-30f38.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096604963474:android:e902112e0aa4ee0333cc4b",
+        "android_client_info": {
+          "package_name": "com.devdtoo.whatchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096604963474-itkg3485cam622p89qpllkpg858khcnc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.devdtoo.whatchat",
+            "certificate_hash": "56dd65950b9898b6829025f8717660afeb9087e9"
+          }
+        },
+        {
+          "client_id": "1096604963474-ou1i1877fbqub1hor2pmstuvq76opvrd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVDUPxI5Iu1Um08vq-Ght0s1vugeLgTzU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096604963474-ou1i1877fbqub1hor2pmstuvq76opvrd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096604963474:android:a3f6d9a733f04561",
+        "android_client_info": {
+          "package_name": "com.example.chatoneapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096604963474-jjok7mt1ekg3gqbip9s24gjq766gnblf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chatoneapp",
+            "certificate_hash": "56dd65950b9898b6829025f8717660afeb9087e9"
+          }
+        },
+        {
+          "client_id": "1096604963474-ou1i1877fbqub1hor2pmstuvq76opvrd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVDUPxI5Iu1Um08vq-Ght0s1vugeLgTzU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096604963474-ou1i1877fbqub1hor2pmstuvq76opvrd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
