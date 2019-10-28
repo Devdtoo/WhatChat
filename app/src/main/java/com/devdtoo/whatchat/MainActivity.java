@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 if (user.getImageURL().equals("default")) {
                     profile_pic.setImageResource(R.drawable.defaultprofile);
                 }else {
+
+
                     Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_pic);
                 }
             }
