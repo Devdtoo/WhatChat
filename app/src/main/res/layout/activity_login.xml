@@ -43,6 +43,15 @@
             android:inputType="textPassword"
             app:met_floatingLabel="normal" />
 
+        <TextView
+            android:id="@+id/forgot_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_password"
+            android:layout_gravity="end"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"/>
+
         <Button
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
