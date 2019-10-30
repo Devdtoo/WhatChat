@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment {
     TextView username;
 
     DatabaseReference reference;
-    ;
+
     FirebaseUser fCurrentUser;
     StorageReference storageReference;
 
