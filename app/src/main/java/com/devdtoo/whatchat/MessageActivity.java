@@ -43,6 +43,7 @@ public class MessageActivity extends AppCompatActivity {
     ImageButton btn_send;
     EditText text_send;
     Intent intent;
+    String userId;
 
     MessageAdapter messageAdapter;
     RecyclerView recyclerView;
@@ -82,7 +83,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
         intent = getIntent();
-        final String userId =  intent.getStringExtra("userId");
+        userId =  intent.getStringExtra("userId");
         fCurrentuser = FirebaseAuth.getInstance().getCurrentUser();
 
         // when send Btn is Tapped, Msg is being send to the User, here userId means UID of Receiver
@@ -148,7 +149,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
 // This Method stores Messages to Firebase Database
-    private void sendMessage(String sender, String receiver, String message) {
+    private void sendMessage(final String sender, String receiver, String message) {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
@@ -159,6 +160,43 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("seen", false);
 
         reference.child("Chats").push().setValue(hashMap);
+
+//        Add user to chat fragment
+        final DatabaseReference chatRefSender = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(fCurrentuser.getUid())
+                .child(userId);
+        final DatabaseReference chatRefReceiver = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(receiver)
+                .child(sender);
+
+        chatRefSender.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    chatRefSender.child("id").setValue(userId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        chatRefReceiver.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    chatRefReceiver.child("id").setValue(sender);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void readMessages (final String myId, final String userId, final String imageUrl) {

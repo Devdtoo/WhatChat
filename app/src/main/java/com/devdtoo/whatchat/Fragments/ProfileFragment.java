@@ -48,7 +48,8 @@ public class ProfileFragment extends Fragment {
     CircleImageView profile_pic;
     TextView username;
 
-    DatabaseReference reference;;
+    DatabaseReference reference;
+    ;
     FirebaseUser fCurrentUser;
     StorageReference storageReference;
 
@@ -74,11 +75,13 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                username.setText(user.getUsername());
-                if (user.getImageURL().equals("default")) {
-                    profile_pic.setImageResource(R.drawable.defaultprofile);
-                } else {
-                    Glide.with(getContext()).load(user.getImageURL()).into(profile_pic);
+                if (isAdded()) {
+                    username.setText(user.getUsername());
+                    if (user.getImageURL().equals("default")) {
+                        profile_pic.setImageResource(R.drawable.defaultprofile);
+                    } else {
+                        Glide.with(getContext()).load(user.getImageURL()).into(profile_pic);
+                    }
                 }
             }
 
@@ -105,20 +108,20 @@ public class ProfileFragment extends Fragment {
         startActivityForResult(intent, IMAGE_RC);
     }
 
-    private String getFileExtension (Uri uri) {
+    private String getFileExtension(Uri uri) {
         ContentResolver contentResolver = getContext().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private  void uploadImage() {
+    private void uploadImage() {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Uploading");
         progressDialog.show();
 
         if (imageUri != null) {
             final StorageReference fileReference = storageReference.child(System.currentTimeMillis()
-                    +"."+getFileExtension(imageUri));
+                    + "." + getFileExtension(imageUri));
 
             uploadTask = fileReference.putFile(imageUri);
             uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -164,7 +167,7 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == IMAGE_RC && resultCode == RESULT_OK
-                && data != null && data.getData() != null ) {
+                && data != null && data.getData() != null) {
 
             imageUri = data.getData();
 
