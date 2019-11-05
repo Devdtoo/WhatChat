@@ -17,6 +17,7 @@ import com.devdtoo.whatchat.Adapter.UserAdapter;
 import com.devdtoo.whatchat.Model.Chat;
 import com.devdtoo.whatchat.Model.ChatList;
 import com.devdtoo.whatchat.Model.User;
+import com.devdtoo.whatchat.Notifications.Token;
 import com.devdtoo.whatchat.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,9 +75,17 @@ public class ChatsFragment extends Fragment {
             }
         });
 
-
+        updateToken(FirebaseInstanceId.getInstance().getToken());
         return view;
     }
+
+    private void updateToken (String token) {
+        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token tokenObj = new Token(token);
+        tokenRef.child(fCurrentUser.getUid()).setValue(tokenObj);
+
+    }
+
 
     private void chatList() {
         mUsers = new ArrayList<>();

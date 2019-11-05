@@ -12,6 +12,7 @@
         android:layout_height="50dp"
         android:src="@drawable/defaultprofile"/>
 
+
     <TextView
         android:id="@+id/username"
         android:layout_width="wrap_content"
@@ -22,6 +23,7 @@
         android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
         android:textSize="18sp" />
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_online"

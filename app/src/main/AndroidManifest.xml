@@ -13,6 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".Notifications.MyFirebaseMessagingServices"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".ResetPasswordActivity"
             android:parentActivityName=".LoginActivity" />
@@ -28,6 +39,7 @@
             android:name=".RegisterActivity"
             android:parentActivityName=".LoginActivity" />
         <activity android:name=".MainActivity" />
+
     </application>
 
 </manifest>

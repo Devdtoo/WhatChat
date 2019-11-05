@@ -12,16 +12,19 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
-
 
 
 import com.bumptech.glide.Glide;
 import com.devdtoo.whatchat.Fragments.ChatsFragment;
 import com.devdtoo.whatchat.Fragments.ProfileFragment;
 import com.devdtoo.whatchat.Fragments.UsersFragment;
+import com.devdtoo.whatchat.Model.Chat;
+import com.devdtoo.whatchat.Model.ChatList;
 import com.devdtoo.whatchat.Model.User;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     TextView username;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+    int unreadChat = 0;
 
 
     @Override
@@ -66,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 username.setText(user.getUsername());
                 if (user.getImageURL().equals("default")) {
                     profile_pic.setImageResource(R.drawable.defaultprofile);
-                }else {
-
-
+                } else {
                     Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_pic);
                 }
             }
@@ -79,20 +81,93 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        final TabLayout tabLayout = findViewById(R.id.tab_layout);
+        final ViewPager viewPager = findViewById(R.id.view_pager);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
-        viewPagerAdapter.addFragment(new UsersFragment(), "Users");
-        viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+                int unread = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Chat chat = snapshot.getValue(Chat.class);
+                    if (chat.getReceiver().equals(firebaseUser.getUid()) && !chat.isSeen() ) {
+                        unread++;
+                    }
+                }
 
-        viewPager.setAdapter(viewPagerAdapter);
+                if (unread == 0) {
+                    viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
+                } else {
+                    viewPagerAdapter.addFragment(new ChatsFragment(), "("+unread+")Chats");
+                }
 
-        tabLayout.setupWithViewPager(viewPager);
+                viewPagerAdapter.addFragment(new UsersFragment(), "Users");
+                viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+
+                viewPager.setAdapter(viewPagerAdapter);
+
+                tabLayout.setupWithViewPager(viewPager);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+       /* DatabaseReference readRef = FirebaseDatabase.getInstance().getReference("Chats");
+        readRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    final Chat chat = snapshot.getValue(Chat.class);
+                    if (chat.getReceiver().equals(firebaseUser.getUid())) {
+
+                        DatabaseReference chatlistRef = FirebaseDatabase.getInstance().getReference("Users");
+                        chatlistRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
+                                    User user = snapshot1.getValue(User.class);
+                                    if (user.getId().equals(chat.getSender()) && !chat.isSeen() ) {
+                                        unreadChat = unreadChat + 1;
+                                    }
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+                String unreadChatStr = unreadChat + "";
+                Log.i("TAGGGGGGGG", unreadChatStr);
+                if (unreadChat != 0) {
+                    unread_msg.setText(unreadChatStr);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+*/
+
+
+
+
 
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -135,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
             return fragments.size();
         }
 
-        public void addFragment (Fragment fragment, String title) {
+        public void addFragment(Fragment fragment, String title) {
             fragments.add(fragment);
             titles.add(title);
         }
@@ -149,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
     //    Methods for Online/Offline Status
 
-    private void status (String status) {
+    private void status(String status) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("status", status);
         reference.updateChildren(hashMap);
