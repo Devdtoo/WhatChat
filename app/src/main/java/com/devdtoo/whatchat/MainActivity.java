@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 //        Toolbar setup -> working --> use androidx.appcompat.widget.Toolbar here n in activity_main...not widget toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -116,54 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-       /* DatabaseReference readRef = FirebaseDatabase.getInstance().getReference("Chats");
-        readRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    final Chat chat = snapshot.getValue(Chat.class);
-                    if (chat.getReceiver().equals(firebaseUser.getUid())) {
-
-                        DatabaseReference chatlistRef = FirebaseDatabase.getInstance().getReference("Users");
-                        chatlistRef.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-                                    User user = snapshot1.getValue(User.class);
-                                    if (user.getId().equals(chat.getSender()) && !chat.isSeen() ) {
-                                        unreadChat = unreadChat + 1;
-                                    }
-
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                }
-                String unreadChatStr = unreadChat + "";
-                Log.i("TAGGGGGGGG", unreadChatStr);
-                if (unreadChat != 0) {
-                    unread_msg.setText(unreadChatStr);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-*/
-
-
-
-
 
 
     }
