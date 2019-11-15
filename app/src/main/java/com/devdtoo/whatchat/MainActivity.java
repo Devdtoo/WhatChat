@@ -12,19 +12,17 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
 import com.devdtoo.whatchat.Fragments.ChatsFragment;
-import com.devdtoo.whatchat.Fragments.ProfileFragment;
+import com.devdtoo.whatchat.Fragments.StoryFragment;
 import com.devdtoo.whatchat.Fragments.UsersFragment;
 import com.devdtoo.whatchat.Model.Chat;
-import com.devdtoo.whatchat.Model.ChatList;
 import com.devdtoo.whatchat.Model.User;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -104,8 +102,9 @@ public class MainActivity extends AppCompatActivity {
                     viewPagerAdapter.addFragment(new ChatsFragment(), "("+unread+")Chats");
                 }
 
+                viewPagerAdapter.addFragment(new StoryFragment(), "Status");
                 viewPagerAdapter.addFragment(new UsersFragment(), "Users");
-                viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+
 
                 viewPager.setAdapter(viewPagerAdapter);
 
@@ -134,6 +133,10 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                return true;
+            case R.id.settings_item:
+                Intent intentToProfile = new Intent(MainActivity.this, ProfileActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intentToProfile);
                 return true;
         }
         return false;
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //    Methods for Online/Offline Status
+    //    Methods for Online/Offline Story
 
     private void status(String status) {
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -195,4 +198,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         status("offline");
     }
+
+
 }

@@ -11,28 +11,20 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-
-import com.devdtoo.whatchat.MainActivity;
 import com.devdtoo.whatchat.MessageActivity;
-import com.devdtoo.whatchat.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
+
 
 public class MyFirebaseMessagingServices extends FirebaseMessagingService {
 
@@ -49,23 +41,7 @@ public class MyFirebaseMessagingServices extends FirebaseMessagingService {
             sendRegistrationToServer(refreshedToken);
         }
 
-        /*FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
-                            return;
-                        }
 
-                        // Get new Instance ID token
-                        String refreshedToken = task.getResult().getToken();
-
-                        if (fCurrentUser != null) {
-                            sendRegistrationToServer(refreshedToken);
-                        }
-                    }
-                });*/
     }
 
     private void sendRegistrationToServer(String refreshedToken) {

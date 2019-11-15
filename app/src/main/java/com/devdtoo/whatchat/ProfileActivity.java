@@ -1,4 +1,4 @@
-package com.devdtoo.whatchat.Fragments;
+package com.devdtoo.whatchat;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -43,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileFragment extends Fragment {
+public class ProfileActivity extends AppCompatActivity {
 
     CircleImageView profile_pic;
     TextView username;
@@ -57,14 +58,13 @@ public class ProfileFragment extends Fragment {
     private Uri imageUri;
     private StorageTask uploadTask;
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile);
 
-        profile_pic = view.findViewById(R.id.profile_pic);
-        username = view.findViewById(R.id.username);
+        profile_pic = findViewById(R.id.profile_pic);
+        username = findViewById(R.id.username);
 
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
 
@@ -75,15 +75,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if (isAdded()) {
-                    username.setText(user.getUsername());
-                    if (user.getImageURL().equals("default")) {
-                        profile_pic.setImageResource(R.drawable.defaultprofile);
-                    } else {
-                        Glide.with(getContext()).load(user.getImageURL()).into(profile_pic);
-                    }
+                username.setText(user.getUsername());
+                if (user.getImageURL().equals("default")) {
+                    profile_pic.setImageResource(R.drawable.defaultprofile);
+                } else {
+                    Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_pic);
                 }
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -98,7 +97,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        return view;
+
     }
 
     private void openImage() {
@@ -109,13 +108,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private String getFileExtension(Uri uri) {
-        ContentResolver contentResolver = getContext().getContentResolver();
+        ContentResolver contentResolver = getApplicationContext().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     private void uploadImage() {
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        final ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
         progressDialog.setMessage("Uploading");
         progressDialog.show();
 
@@ -146,19 +145,19 @@ public class ProfileFragment extends Fragment {
 
                         progressDialog.dismiss();
                     } else {
-                        Toast.makeText(getContext(), "Uploading Failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Uploading Failed!", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
             });
         } else {
-            Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "No Image Selected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -172,7 +171,7 @@ public class ProfileFragment extends Fragment {
             imageUri = data.getData();
 
             if (uploadTask != null && uploadTask.isInProgress()) {
-                Toast.makeText(getContext(), "Upload in Progress", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Upload in Progress", Toast.LENGTH_SHORT).show();
             } else {
                 uploadImage();
             }

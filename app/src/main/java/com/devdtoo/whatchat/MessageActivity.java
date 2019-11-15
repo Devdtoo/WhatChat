@@ -34,13 +34,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.Request;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -318,7 +318,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
 
-//    Methods for Online/Offline Status
+//    Methods for Online/Offline Story
 
     private void status (String status) {
         reference = FirebaseDatabase.getInstance().getReference("Users").child(fCurrentuser.getUid());
