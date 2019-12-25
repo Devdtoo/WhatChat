@@ -16,26 +16,28 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:popupTheme="@style/MenuStyle">
+            android:background="@color/colorAccent"
+            android:popupTheme="@style/MenuStyle"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_pic"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                />
+                app:civ_border_color="@color/colorWhite"
+                android:src="@drawable/defaultprofile"
+                app:civ_border_width="1dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp" />
 
             <TextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
                 android:layout_marginStart="25dp"
-                android:textColor="#fff"
-                android:textStyle="bold"
+                android:layout_marginLeft="25dp"
+                android:textColor="@color/colorWhite"
                 android:textSize="18sp"
-                />
+                android:textStyle="bold"
+                tools:ignore="RtlHardcoded" />
 
 
         </androidx.appcompat.widget.Toolbar>
@@ -44,10 +46,10 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            app:tabSelectedTextColor="#fff"
-            app:tabIndicatorColor="#fff"
-            app:tabTextColor="#fff" />
+            android:background="@color/colorAccent"
+            app:tabIndicatorColor="@color/colorWhite"
+            app:tabSelectedTextColor="@color/colorWhite"
+            app:tabTextColor="@color/colorWhite" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

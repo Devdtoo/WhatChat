@@ -1,9 +1,11 @@
 package com.devdtoo.whatchat;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth auth;
     DatabaseReference reference;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +46,10 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         register_btn = findViewById(R.id.register_btn);
 //        Toolbar setup -> working --> use android.widget.Toolbar  ...not androidx toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setActionBar(toolbar);
+       /*  Toolbar toolbar = findViewById(R.id.toolbar);
+       setActionBar(toolbar);
         getActionBar().setTitle("Register");
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);*/
 
         auth = FirebaseAuth.getInstance();
 

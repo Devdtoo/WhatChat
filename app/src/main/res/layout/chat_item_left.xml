@@ -15,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="hello"
+
         android:background="@drawable/background_left"
         android:layout_toEndOf="@+id/profile_pic"
         android:textSize="18sp"

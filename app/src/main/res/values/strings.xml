@@ -13,5 +13,10 @@
     <string name="profile">Profile</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="reset_textview">By clicking RESET,  you will receive an email to reset your password.</string>
+    <string name="your_email">Your email…</string>
+    <string name="reset">Reset</string>
+    <string name="search">Search...</string>
+    <string name="type_something">Type something..</string>
+    <string name="name">Name</string>
 
 </resources>

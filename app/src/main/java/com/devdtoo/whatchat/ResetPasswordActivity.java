@@ -31,10 +31,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reset_password);
 
         //        Toolbar setup -> working --> use android.widget.Toolbar  ...not androidx toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
+       /* Toolbar toolbar = findViewById(R.id.toolbar);
         setActionBar(toolbar);
         getActionBar().setTitle("Reset Password");
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);*/
 
         send_reset_email = findViewById(R.id.send_reset_email);
         reset_pass_btn = findViewById(R.id.reset_pass_btn);

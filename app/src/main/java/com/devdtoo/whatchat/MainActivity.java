@@ -8,16 +8,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.bumptech.glide.Glide;
 import com.devdtoo.whatchat.Fragments.ChatsFragment;
 import com.devdtoo.whatchat.Fragments.StoryFragment;
@@ -102,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     viewPagerAdapter.addFragment(new ChatsFragment(), "("+unread+")Chats");
                 }
 
-                viewPagerAdapter.addFragment(new StoryFragment(), "Status");
+//                viewPagerAdapter.addFragment(new StoryFragment(), "Status");
                 viewPagerAdapter.addFragment(new UsersFragment(), "Users");
 
 
@@ -131,8 +127,10 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.logout_item:
                 FirebaseAuth.getInstance().signOut();
+//                Toast.makeText(this, "Logout Successful", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
                 return true;
             case R.id.settings_item:
                 Intent intentToProfile = new Intent(MainActivity.this, ProfileActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
