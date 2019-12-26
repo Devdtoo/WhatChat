@@ -21,6 +21,15 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark"/>
 
+            <TextView
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/colorPrimaryDark"/>
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_pic"
                 android:layout_width="100dp"

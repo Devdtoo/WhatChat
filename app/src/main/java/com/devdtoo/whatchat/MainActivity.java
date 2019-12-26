@@ -8,18 +8,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.devdtoo.whatchat.Fragments.ChatsFragment;
 import com.devdtoo.whatchat.Fragments.StoryFragment;
 import com.devdtoo.whatchat.Fragments.UsersFragment;
 import com.devdtoo.whatchat.Model.Chat;
 import com.devdtoo.whatchat.Model.User;
+import com.devdtoo.whatchat.Utility.Commonhelper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,12 +44,15 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     DatabaseReference reference;
     int unreadChat = 0;
+    private Commonhelper commonhelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        commonhelper = new Commonhelper(this);
 
 //        Toolbar setup -> working --> use androidx.appcompat.widget.Toolbar here n in activity_main...not widget toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -87,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 int unread = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chat chat = snapshot.getValue(Chat.class);
-                    if (chat.getReceiver().equals(firebaseUser.getUid()) && !chat.isSeen() ) {
+                    if (chat.getReceiver().equals(firebaseUser.getUid()) && !chat.isSeen()) {
                         unread++;
                     }
                 }
@@ -95,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 if (unread == 0) {
                     viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
                 } else {
-                    viewPagerAdapter.addFragment(new ChatsFragment(), "("+unread+")Chats");
+                    viewPagerAdapter.addFragment(new ChatsFragment(), "(" + unread + ")Chats");
                 }
 
 //                viewPagerAdapter.addFragment(new StoryFragment(), "Status");
@@ -125,13 +131,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.logout_item:
-                FirebaseAuth.getInstance().signOut();
-//                Toast.makeText(this, "Logout Successful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-                return true;
             case R.id.settings_item:
                 Intent intentToProfile = new Intent(MainActivity.this, ProfileActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intentToProfile);

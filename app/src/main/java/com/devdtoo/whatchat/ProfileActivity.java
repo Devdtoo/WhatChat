@@ -37,6 +37,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 
@@ -52,11 +54,12 @@ public class ProfileActivity extends AppCompatActivity {
     DatabaseReference reference;
 
     FirebaseUser fCurrentUser;
-    StorageReference storageReference;
 
-    private static final int IMAGE_RC = 1;
-    private Uri imageUri;
+    private TextView logout;
+
+    private Uri mImageUri;
     private StorageTask uploadTask;
+    StorageReference storageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +68,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         profile_pic = findViewById(R.id.profile_pic);
         username = findViewById(R.id.username);
+        logout = findViewById(R.id.logout);
 
-        storageReference = FirebaseStorage.getInstance().getReference("uploads");
+        storageRef = FirebaseStorage.getInstance().getReference("uploads");
 
         fCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference().child("Users").child(fCurrentUser.getUid());
@@ -93,36 +97,42 @@ public class ProfileActivity extends AppCompatActivity {
         profile_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openImage();
+                CropImage.activity()
+                        .setAspectRatio(1,1)
+                        .setCropShape(CropImageView.CropShape.OVAL)
+                        .start(ProfileActivity.this);
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                startActivity(new Intent(ProfileActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                finish();
             }
         });
 
 
     }
 
-    private void openImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, IMAGE_RC);
+    private String getFileExtension(Uri uri){
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
-    private String getFileExtension(Uri uri) {
-        ContentResolver contentResolver = getApplicationContext().getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
 
-    private void uploadImage() {
-        final ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
-        progressDialog.setMessage("Uploading");
-        progressDialog.show();
+    private void uploadImage(){
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Uploading");
+        pd.show();
+        if (mImageUri != null){
+            final StorageReference fileReference = storageRef.child(System.currentTimeMillis()
+                    + "." + getFileExtension(mImageUri));
 
-        if (imageUri != null) {
-            final StorageReference fileReference = storageReference.child(System.currentTimeMillis()
-                    + "." + getFileExtension(imageUri));
-
-            uploadTask = fileReference.putFile(imageUri);
+            uploadTask = fileReference.putFile(mImageUri);
             uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -136,46 +146,45 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
-                        String mUri = downloadUri.toString();
+                        String miUrlOk = downloadUri.toString();
 
-                        reference = FirebaseDatabase.getInstance().getReference().child("Users").child(fCurrentUser.getUid());
-                        HashMap<String, Object> map = new HashMap<>();
-                        map.put("imageURL", mUri);
-                        reference.updateChildren(map);
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fCurrentUser.getUid());
+                        HashMap<String, Object> map1 = new HashMap<>();
+                        map1.put("imageURL", ""+miUrlOk);
+                        reference.updateChildren(map1);
 
-                        progressDialog.dismiss();
+                        pd.dismiss();
+
                     } else {
-                        Toast.makeText(getApplicationContext(), "Uploading Failed!", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
+                        Toast.makeText(ProfileActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
+
         } else {
-            Toast.makeText(getApplicationContext(), "No Image Selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileActivity.this, "No image selected", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == IMAGE_RC && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
-            imageUri = data.getData();
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            mImageUri = result.getUri();
 
-            if (uploadTask != null && uploadTask.isInProgress()) {
-                Toast.makeText(getApplicationContext(), "Upload in Progress", Toast.LENGTH_SHORT).show();
-            } else {
-                uploadImage();
-            }
+            uploadImage();
 
+        } else {
+            Toast.makeText(this, "Something gone wrong!", Toast.LENGTH_SHORT).show();
         }
+
     }
 }
