@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.devdtoo.whatchat.Model.User;
 import com.devdtoo.whatchat.R;
+import com.devdtoo.whatchat.Utility.Commonhelper;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView username;
 
     DatabaseReference reference;
+    Commonhelper commonhelper;
 
     FirebaseUser fCurrentUser;
 
@@ -69,6 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
         profile_pic = findViewById(R.id.profile_pic);
         username = findViewById(R.id.username);
         logout = findViewById(R.id.logout);
+        commonhelper = new Commonhelper(this);
 
         storageRef = FirebaseStorage.getInstance().getReference("uploads");
 
@@ -108,6 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
+                commonhelper.ClearSharedPreference();
 //                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
                 startActivity(new Intent(ProfileActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 finish();

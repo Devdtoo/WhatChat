@@ -15,6 +15,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 
+import com.devdtoo.whatchat.Utility.Commonhelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     
     FirebaseAuth auth;
     DatabaseReference reference;
+    Commonhelper commonhelper;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -45,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         register_btn = findViewById(R.id.register_btn);
+        commonhelper = new Commonhelper(this);
 //        Toolbar setup -> working --> use android.widget.Toolbar  ...not androidx toolbar
        /*  Toolbar toolbar = findViewById(R.id.toolbar);
        setActionBar(toolbar);
@@ -73,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
         
     }
 
-    private void register(final String username, String email, String password) {
+    private void register(final String username, final String email, String password) {
 
 
         auth.createUserWithEmailAndPassword(email, password)
@@ -84,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.i("Registered", "Registration IS SUCCESSFULL");
                             FirebaseUser firebaseUser = auth.getCurrentUser();
                             assert firebaseUser != null;
-                            String uid = firebaseUser.getUid();
+                            final String uid = firebaseUser.getUid();
                             Log.i("UID", "GOT UID STORED");
 
 //                          Database
@@ -94,6 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                             HashMap<String, String> hashMap = new HashMap<>();
                             hashMap.put("id", uid);
                             hashMap.put("username", username);
+                            hashMap.put("email", email);
                             hashMap.put("imageURL", "default");
                             hashMap.put("status", "offline");
                             hashMap.put("search", username.toLowerCase());
@@ -104,9 +108,21 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Log.i("Database", "Database VALUE is SET");
-                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
+                                        try {
+
+                                            commonhelper.setSharedPreferences("uid", uid);
+                                            commonhelper.setSharedPreferences("username", username);
+                                            commonhelper.setSharedPreferences("email", email);
+                                            commonhelper.setSharedPreferences("search", username.toLowerCase());
+
+                                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
                                     }
                                 }
                             });

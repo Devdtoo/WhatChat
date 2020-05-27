@@ -15,6 +15,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 
+import com.devdtoo.whatchat.Utility.Commonhelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,18 +30,9 @@ public class LoginActivity extends AppCompatActivity {
     Button login_btn, register;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
+    Commonhelper commonhelper;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Check if user is already logged In... This is to bypass Login screen to MainScreen
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +46,18 @@ public class LoginActivity extends AppCompatActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+
+        commonhelper = new Commonhelper(this);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            if (firebaseUser.getUid().equals(commonhelper.getSharedPreferences("uid" , null))) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         forgot_password = findViewById(R.id.forgot_pass);
@@ -64,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String txt_email = email.getText().toString();
+                final String txt_email = email.getText().toString();
                 String txt_password = password.getText().toString();
                 Log.i("Login Btn", "Button clicked");
 
@@ -78,10 +82,18 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                        finish();
+                                        try {
+                                            commonhelper.setSharedPreferences("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                            commonhelper.setSharedPreferences("email", txt_email);
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                            finish();
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
                                     } else {
                                         Toast.makeText(LoginActivity.this, "Authentication Failed!", Toast.LENGTH_SHORT).show();
                                     }
